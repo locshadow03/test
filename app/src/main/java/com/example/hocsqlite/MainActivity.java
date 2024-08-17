@@ -103,5 +103,47 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
             }
         });
+
+        btnupdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String malop = edtmalop.getText().toString();
+                String tenlop = edttenlop.getText().toString();
+                int siso = Integer.parseInt(edtsiso.getText().toString());
+
+                ContentValues myvalue = new ContentValues();
+                myvalue.put("malop", malop);
+                myvalue.put("tenlop", tenlop);
+                myvalue.put("siso", siso);
+
+                int n = mydatabase.update("tbllop",myvalue, "malop = ?", new String[]{malop} );
+                String msg = "";
+                if(n == 0){
+                    msg = "fail update";
+                } else{
+                    msg = "Update Successfully";
+                }
+                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        btnquery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mylist.clear();
+                Cursor c = mydatabase.query("tbllop", null, null, null, null, null, null);
+                c.moveToNext();
+                String data = "";
+
+                while(c.isAfterLast() == false){
+                    data = c.getString(0) + " - " + c.getString(1) + " - " + c.getString(2);
+
+                    c.moveToNext();
+                    mylist.add(data);
+                }
+                c.close();
+                myadapter.notifyDataSetChanged();
+            }
+        });
     }
 }
